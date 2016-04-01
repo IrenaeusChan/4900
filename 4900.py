@@ -6,6 +6,7 @@ sys.path.append(os.path.realpath("Library"))
 import phipsi
 import protein
 import smithwaterman
+import newCoord
 
 path = os.getcwd()
 
@@ -35,6 +36,10 @@ if __name__ == '__main__':
 				p, center = calculate(filename)
 				protein.relativeToCenter(p, center)
 				only_100+=1
+	elif (sys.argv[1] == "new" and len(sys.argv) > 2): 	#New Geometric Calculations
+														#Working Here
+		p = protein.buildProtein(sys.argv[2])				
+		newCoord.calculateCoordinates(p, sys.argv[2])
 	elif (sys.argv[1] == "align" and len(sys.argv) > 3):
 		print "\nAligning your two files."
 		if os.path.isfile(sys.argv[2]) == True:
