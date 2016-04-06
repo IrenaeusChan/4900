@@ -7,6 +7,7 @@ import phipsi
 import protein
 import smithwaterman
 import newCoord
+import extra
 
 path = os.getcwd()
 
@@ -37,7 +38,6 @@ if __name__ == '__main__':
 				protein.relativeToCenter(p, center)
 				only_100+=1
 	elif (sys.argv[1] == "new" and len(sys.argv) > 2): 	#New Geometric Calculations
-														#Working Here
 		p = protein.buildProtein(sys.argv[2])				
 		newCoord.calculateCoordinates(p, sys.argv[2])
 	elif (sys.argv[1] == "align" and len(sys.argv) > 3):
@@ -53,30 +53,37 @@ if __name__ == '__main__':
 			p, center = calculate(sys.argv[3][:-4])
 			targetSeq = smithwaterman.readSeq(sys.argv[3])
 		smithwaterman.align(mainSeq, targetSeq, sys.argv[2], sys.argv[3])
+	#If the user wants to calculate the PhiPsi angles for ONLY the Helix or SHEETS	
+	elif (len(sys.argv) > 2 and (sys.argv[1] == "Helix" or sys.argv[1] == "helix")):
+		#We need to read the PDB file once again to get more information about positions
+		p = protein.buildProtein(sys.argv[2])
+		cenx, ceny, cenz = protein.weightedAverage(p)
+		center = [cenx, ceny, cenz]
+		helixList, sheetList, coilList = extra.readFileExtra(sys.argv[2], p)
+		if (len(helixList)<1):
+			print "\nThere were no HELICES in this protein"
+		for helix in helixList:
+			phipsi.calculatePhiPsi(helix, center, sys.argv[2])
+	#Same for HELIX
+	elif (len(sys.argv) > 2 and (sys.argv[1] == "Sheets" or sys.argv[1] == "sheets")):
+		p = protein.buildProtein(sys.argv[2])
+		cenx, ceny, cenz = protein.weightedAverage(p)
+		center = [cenx, ceny, cenz]
+		helixList, sheetList, coilList = extra.readFileExtra(sys.argv[2], p)
+		if (len(sheetList)<1):
+			print "\nThere were no SHEETS in this protein"
+		for sheet in sheetList:
+			phipsi.calculatePhiPsi(sheet, center, sys.argv[2])
+	elif (sys.argv[1] == "coil" and len(sys.argv) > 2):
+		p = protein.buildProtein(sys.argv[2])
+		helixList, sheetList, coilList = extra.readFileExtra(sys.argv[2], p)
+		#Run with CoilList. Does not generate BEFORE and AFTER yet. But should.
+		for coil in coilList:
+			newCoord.calculateCoordinates(coil, sys.argv[2])
 	else:
 		print "\nERROR: File type is incorrect."
 		print "\nERROR: If ALL selected, set path directory."
 		sys.exit(1)
-		
-	"""
-	#If the user wants to calculate the PhiPsi angles for ONLY the Helix or SHEETS	
-	#Temperarily unavailable
-	if (len(sys.argv) > 2 and (sys.argv[2] == "Helix" or sys.argv[2] == "helix")):
-		#We need to read the PDB file once again to get more information about positions
-		helixList, sheetList = readFileExtra(sys.argv[1], protein)
-		if (len(helixList)<1):
-			print "\nThere were no HELICES in this protein"
-		for helix in helixList:
-			calculatePhiPsi(helix, center)
-	#Same for HELIX
-	#Temperarily unavailable
-	elif (len(sys.argv) > 2 and (sys.argv[2] == "Sheets" or sys.argv[2] == "sheets")):
-		helixList, sheetList = readFileExtra(sys.argv[1], protein)
-		if (len(sheetList)<1):
-			print "\nThere were no SHEETS in this protein"
-		for sheet in sheetList:
-			calculatePhiPsi(sheet, center)
-	"""
 
 	if (len(sys.argv) > 2 and (sys.argv[2] == "Center" or sys.argv[2] == "center")):
 		print "Protein's Center (X, Y, Z): " + str(protein.weightedAverage(p))
@@ -86,6 +93,9 @@ if __name__ == '__main__':
 		print "Other Options Available:"
 		print "\tCenter"
 		print "\tDistance"
+		print "\tNew Geometric"
+		print "\tHelix"
+		print "\tSheet"
 		print ""
 		print "If you would like to calculate entire files of PDB Files:"
 		print "\tall file_path"

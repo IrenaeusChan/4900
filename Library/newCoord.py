@@ -35,7 +35,13 @@ def calculateCoordinates(protein, filename):
 				#We want to develop the initial coordinate system using the first AminoAcid
 				vectorX = vector.vectorCalculation(center, front)
 				vectorZ = vector.vectorCalculation(center, wing)
-				vectorY = vector.crossProduct(vectorX, vectorZ)
+				#When Z is positive, the cross product has to be done differently where Z then X
+				# if Z is negative, the cross product has to be done with X then Z
+				if vectorZ[2] < 0:
+					vectorY = vector.crossProduct(vectorX, vectorZ)
+				else:
+					vectorY = vector.crossProduct(vectorZ, vectorX)
+				
 				#Vector Z may not be perpindicular to both Vector X and Vector Y
 				vectorZ = vector.crossProduct(vectorX, vectorY)
 				#This should guaruntee that vector Z is now perpindicular to BOTH X and Y and not just Y
@@ -45,7 +51,8 @@ def calculateCoordinates(protein, filename):
 				continue
 			else:
 				for i in range(0,3):
-					normalVector1 = vectorY
+					#This is because, we calculate PhiPsi as NCa, but this Vector is calculated by doing CaN
+					normalVector1 = vector.crossProduct(vector.vectorCalculation(wing,center),vectorX)
 
 					C = front
 					N = [AA.backbone[i].x, AA.backbone[i].y, AA.backbone[i].z]
@@ -60,7 +67,7 @@ def calculateCoordinates(protein, filename):
 
 					#Same algorithm as calculating PhiPsi Angles
 					angle = vector.dihedralAngle(normalVector1, normalVector2)
-					if vector.dotProduct(vector.crossProduct(normalVector2, normalVector1), vectorX) > 0:
+					if vector.dotProduct(vector.crossProduct(normalVector2, normalVector1), vectorX) < 0:
 						angle = -angle
 
 					#Just to make it easier for myself to remember which is what
@@ -70,15 +77,22 @@ def calculateCoordinates(protein, filename):
 					front = [AA.backbone[i].x, AA.backbone[i].y, AA.backbone[i].z]
 
 					#I want center to move to origin and I want front to move to new vector relative to origin
-					new = [front[0] - (center[0] - origin[0]), front[1] - (center[1] - origin[1]), front[2] - (center[2] - origin[2])]
+					#new = [front[0] - (center[0] - origin[0]), front[1] - (center[1] - origin[1]), front[2] - (center[2] - origin[2])]
 
 					#The "scalar projection" of the VectorPoint onto Vector(X, Y, or Z) IS the LENGTH of (x, y, or z)
-					vectorPoint = vector.vectorCalculation(origin, new)
-					x = (vector.dotProduct(vectorX, vectorPoint))/vector.vectorMagnitude(vectorX)
-					y = (vector.dotProduct(vectorY, vectorPoint))/vector.vectorMagnitude(vectorY)
-					z = (vector.dotProduct(vectorZ, vectorPoint))/vector.vectorMagnitude(vectorZ)
+					vectorPoint = vector.vectorCalculation(origin, center)
+					x1 = (vector.dotProduct(vectorX, vectorPoint))/vector.vectorMagnitude(vectorX)
+					y1 = (vector.dotProduct(vectorY, vectorPoint))/vector.vectorMagnitude(vectorY)
+					z1 = (vector.dotProduct(vectorZ, vectorPoint))/vector.vectorMagnitude(vectorZ)
 
-					output.write(str(AA.backbone[i].atom) + ' ' + str(x) + ' ' + str(y) + ' ' + str(z) + ' ' + str(angle) + '\n')
+					vectorPoint = vector.vectorCalculation(origin, front)
+					x2 = (vector.dotProduct(vectorX, vectorPoint))/vector.vectorMagnitude(vectorX)
+					y2 = (vector.dotProduct(vectorY, vectorPoint))/vector.vectorMagnitude(vectorY)
+					z2 = (vector.dotProduct(vectorZ, vectorPoint))/vector.vectorMagnitude(vectorZ)
+
+					newCoordVector = vector.vectorCalculation([x1,y1,z1], [x2,y2,z2])
+
+					output.write(str(AA.backbone[i].atom) + ' ' + str(newCoordVector[0]) + ' ' + str(newCoordVector[1]) + ' ' + str(newCoordVector[2]) + ' ' + str(angle) + '\n')
 
 					#Now we change the coordinate system to the new line
 					vectorX = vector.vectorCalculation(center, front)

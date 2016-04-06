@@ -21,6 +21,7 @@ class Atom (object):
 			x: X position of the atom
 			y: Y position of the atom
 			z: Z position of the atom
+			element: Which element the atom is made of (mainly important for side chains)
 
 		Exceptions:
 			ValuError: If given invalid atom, x, y, or z

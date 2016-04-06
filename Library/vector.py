@@ -10,7 +10,7 @@ import math
 
 def vectorCalculation(coord1, coord2):
 #Converts the coordinates for the atoms into a vector between the two atoms representing the "bond"
-	return [coord1[0]-coord2[0], coord1[1]-coord2[1], coord1[2]-coord2[2]]
+	return [coord2[0]-coord1[0], coord2[1]-coord1[1], coord2[2]-coord1[2]]
 
 def crossProduct(vector1, vector2):
 	x = vector1[1]*vector2[2] - vector1[2]*vector2[1]

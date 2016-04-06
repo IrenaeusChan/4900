@@ -21,6 +21,7 @@ class AminoAcid (object):
 			seqres: Which chain does the Amino Acid belong to
 			position: The exact position of the Amino Acid
 			backbone: The backbone atoms
+			sidechain: The sidechain atoms
 
 		Exceptions:
 			ValuError: If given invalid amino_acid, seqres, position, or backbone

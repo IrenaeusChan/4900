@@ -18,9 +18,9 @@ def previousAndNext(some_iterable):
 
 def calculatePhiPsi(protein, center, filename):
 	write = 'w'
-	if (len(sys.argv) > 2 and (sys.argv[2] == "Helix" or sys.argv[2] == "helix")):
+	if (len(sys.argv) > 2 and (sys.argv[1] == "Helix" or sys.argv[1] == "helix")):
 		write = 'a'
-	elif (len(sys.argv) > 2 and (sys.argv[2] == "Sheets" or sys.argv[2] == "sheets")):
+	elif (len(sys.argv) > 2 and (sys.argv[1] == "Sheets" or sys.argv[1] == "sheets")):
 		write = 'a'
 	elif (sys.argv[1] == "all" and len(sys.argv) > 2):
 		write = 'a'
@@ -58,7 +58,7 @@ def calculatePhiPsi(protein, center, filename):
 			# so the angle between them is the dihedral angle that we are looking for.  
 			# However, since "angle" only returns values between 0 and pi, we need to make
 			# sure we get the right sign relative to the rotation axis
-			if vector.dotProduct(vector.crossProduct(normalVector1, normalVector2), vectorNCa) > 0:
+			if vector.dotProduct(vector.crossProduct(normalVector1, normalVector2), vectorNCa) < 0:
 				phi = -phi
 
 			normalVector1 = vector.crossProduct(vectorNCa,vectorCaC)
@@ -71,7 +71,7 @@ def calculatePhiPsi(protein, center, filename):
 			# so the angle between them is the dihedral angle that we are looking for.  
 			# However, since "angle" only returns values between 0 and pi, we need to make
 			# sure we get the right sign relative to the rotation axis
-			if vector.dotProduct(vector.crossProduct(normalVector1, normalVector2), vectorCaC) > 0:
+			if vector.dotProduct(vector.crossProduct(normalVector1, normalVector2), vectorCaC) < 0:
 				psi = -psi
 
 			aminoacid = [AA.avgx, AA.avgy, AA.avgz]

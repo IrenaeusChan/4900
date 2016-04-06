@@ -22,6 +22,7 @@ class Protein(object):
 			amino_acids: A list of Amino Acids
 		"""
 		self.amino_acids = amino_acids
+		self.length = amino_acids[-1].position
 
 	def __hash__(self):
 		return hash(self.__repr__())

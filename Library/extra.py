@@ -109,10 +109,54 @@ class Sheet(object):
 			sheet_sequence += "{0}\n".format(AA)
 		return sheet_sequence
 
+class Coil(object):
+	def __init__(self, start, stop, amino_acids):
+		"""Creates a new Coil made up of Amino Acids
+
+		Arguments:
+			start: The starting position of the Coil
+			stop: The ending position of the Coil
+			seqres: Which chain does the Coil belong to
+			amino_acids: All the Amino Acids that build up the Coil
+
+		Exceptions:
+			ValuError: If given invalid start, stop, seqres, or amino_acids
+		"""
+
+		if isinstance(start, int):
+			self.start = start
+		else: 
+			raise ValueError('Invalid Start Position {0}'.format(start))
+
+		if isinstance(stop, int):
+			self.stop = stop
+		else:
+			raise ValueError('Invalid Stop Position {0}'.format(stop))
+
+		self.amino_acids = amino_acids
+
+	def __hash__(self):
+		return hash(self.__repr__())
+
+	def __eq__(self,other):
+		return self.amino_acids == other.amino_acids
+
+	def __ne__(self, other):
+		return not self.__eq__(other)
+
+	def __repr__(self):
+		coil_sequence = ""
+		for AA in self.amino_acids:
+			coil_sequence += "{0}\n".format(AA)
+		return coil_sequence
+
 def readFileExtra(file_name, protein):
 	sequence = []
 	helixList = []
 	sheetList = []
+	coilList = []
+	startList = [0]
+	stopList = []
 
 	with open(file_name, "r") as stream:
 		for line in stream:
@@ -123,10 +167,15 @@ def readFileExtra(file_name, protein):
 				seqres = str(line[19:20])
 				helixType = int(line[39:40])
 
+				stopList.append(start)
+				startList.append(stop)
+
 				#Looks for the position of the Amino Acid using the already parsed sequence and copies the sequence
 				for AA in protein.amino_acids:
 					if (AA.position >= start and AA.position <= stop):
 						sequence.append(AA)
+					if (AA.position == stop):
+						break
 
 				#Appends the HELIX sequence to a list of other sequences
 				helixList.append(Helix(start, stop, seqres, helixType, sequence))
@@ -139,12 +188,24 @@ def readFileExtra(file_name, protein):
 				seqres = str(line[21:22])
 				sheetType = int(line[38:40])
 
+				stopList.append(start)
+				startList.append(stop)
+
 				#Looks for the position of the Amino Acid using the already parsed sequence and copies the sequence
 				for AA in protein.amino_acids:
 					if (AA.position >= start and AA.position <= stop):
 						sequence.append(AA)
+					if (AA.position == stop):
+						break
 
 				#Appends the SHEET sequence to a list of other sequences
 				sheetList.append(Sheet(start, stop, seqres, sheetType, amino_acids))
 				sequence = []
-	return helixList, sheetList
+		stopList.append(protein.length)
+
+		for start, stop in zip(startList, stopList):
+			for AA in protein.amino_acids:
+				if (AA.position > start and AA.position < stop):
+					sequence.append(AA)
+			coilList.append(Coil(start, stop, sequence))
+	return helixList, sheetList, coilList
