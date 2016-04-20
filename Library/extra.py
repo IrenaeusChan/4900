@@ -199,7 +199,7 @@ def readFileExtra(file_name, protein):
 						break
 
 				#Appends the SHEET sequence to a list of other sequences
-				sheetList.append(Sheet(start, stop, seqres, sheetType, amino_acids))
+				sheetList.append(Sheet(start, stop, seqres, sheetType, sequence))
 				sequence = []
 		stopList.append(protein.length)
 
@@ -208,4 +208,5 @@ def readFileExtra(file_name, protein):
 				if (AA.position > start and AA.position < stop):
 					sequence.append(AA)
 			coilList.append(Coil(start, stop, sequence))
+			sequence = []
 	return helixList, sheetList, coilList

@@ -78,8 +78,10 @@ if __name__ == '__main__':
 		p = protein.buildProtein(sys.argv[2])
 		helixList, sheetList, coilList = extra.readFileExtra(sys.argv[2], p)
 		#Run with CoilList. Does not generate BEFORE and AFTER yet. But should.
+		if (len(coilList)<1):
+			print "\nThere were no COILS in this protein"
 		for coil in coilList:
-			newCoord.calculateCoordinates(coil, sys.argv[2])
+			newCoord.calculate(coil, sys.argv[2])
 	else:
 		print "\nERROR: File type is incorrect."
 		print "\nERROR: If ALL selected, set path directory."
