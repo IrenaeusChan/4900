@@ -38,8 +38,13 @@ if __name__ == '__main__':
 				protein.relativeToCenter(p, center)
 				only_100+=1
 	elif (sys.argv[1] == "new" and len(sys.argv) > 2): 	#New Geometric Calculations
-		p = protein.buildProtein(sys.argv[2])				
-		newCoord.calculateCoordinates(p, sys.argv[2])
+		p = protein.buildProtein(sys.argv[2])
+		helixList, sheetList, coilList = extra.readFileExtra(sys.argv[2], p)
+		#Run with CoilList. Does not generate BEFORE and AFTER yet. But should.
+		if (len(coilList)<1):
+			print "\nThere were no COILS in this protein"
+		for coil in coilList:
+			newCoord.calculate(coil, sys.argv[2])
 	elif (sys.argv[1] == "align" and len(sys.argv) > 3):
 		print "\nAligning your two files."
 		if os.path.isfile(sys.argv[2]) == True:
@@ -74,14 +79,16 @@ if __name__ == '__main__':
 			print "\nThere were no SHEETS in this protein"
 		for sheet in sheetList:
 			phipsi.calculatePhiPsi(sheet, center, sys.argv[2])
-	elif (sys.argv[1] == "coil" and len(sys.argv) > 2):
+	elif ((sys.argv[1] == "coil" or sys.argv[1] == "Coil") and len(sys.argv) > 2):
 		p = protein.buildProtein(sys.argv[2])
+		cenx, ceny, cenz = protein.weightedAverage(p)
+		center = [cenx, ceny, cenz]
 		helixList, sheetList, coilList = extra.readFileExtra(sys.argv[2], p)
 		#Run with CoilList. Does not generate BEFORE and AFTER yet. But should.
 		if (len(coilList)<1):
 			print "\nThere were no COILS in this protein"
 		for coil in coilList:
-			newCoord.calculate(coil, sys.argv[2])
+			phipsi.calculatePhiPsi(coil, center, sys.argv[2])
 	else:
 		print "\nERROR: File type is incorrect."
 		print "\nERROR: If ALL selected, set path directory."
@@ -95,12 +102,15 @@ if __name__ == '__main__':
 		print "Other Options Available:"
 		print "\tCenter"
 		print "\tDistance"
-		print "\tNew Geometric"
 		print "\tHelix"
-		print "\tSheet"
+		print "\tSheets"
+		print "\tCoil"
 		print ""
 		print "If you would like to calculate entire files of PDB Files:"
 		print "\tall file_path"
 		print "To align two PDB files that have existing PhiPsi Calculations already done:"
 		print "\talign file_name1 file_name2"
+		print ""
+		print "In order to use the new geometric analysis on a single PDB file:"
+		print "\t new file_name"
 
