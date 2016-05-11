@@ -22,6 +22,8 @@ def calculatePhiPsi(protein, center, filename):
 		write = 'a'
 	elif (len(sys.argv) > 2 and (sys.argv[1] == "Sheets" or sys.argv[1] == "sheets")):
 		write = 'a'
+	elif (len(sys.argv) > 2 and (sys.argv[1] == "Coil" or sys.argv[1] == "coil")):
+		write = 'a'
 	elif (sys.argv[1] == "all" and len(sys.argv) > 2):
 		write = 'a'
 

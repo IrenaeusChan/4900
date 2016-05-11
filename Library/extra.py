@@ -2,7 +2,7 @@
 Irenaeus Chan
 11/27/2015
 
-Helix and Sheets - Temporarily Unavailable
+Helix and Sheets
 """
 
 from atom import Atom
@@ -150,13 +150,9 @@ class Coil(object):
 			coil_sequence += "{0}\n".format(AA)
 		return coil_sequence
 
-def readFileExtra(file_name, protein):
+def buildHelix(file_name, protein):
 	sequence = []
 	helixList = []
-	sheetList = []
-	coilList = []
-	startList = [0]
-	stopList = []
 
 	with open(file_name, "r") as stream:
 		for line in stream:
@@ -166,9 +162,6 @@ def readFileExtra(file_name, protein):
 				stop = int(line[33:37])
 				seqres = str(line[19:20])
 				helixType = int(line[39:40])
-
-				stopList.append(start)
-				startList.append(stop)
 
 				#Looks for the position of the Amino Acid using the already parsed sequence and copies the sequence
 				for AA in protein.amino_acids:
@@ -180,16 +173,22 @@ def readFileExtra(file_name, protein):
 				#Appends the HELIX sequence to a list of other sequences
 				helixList.append(Helix(start, stop, seqres, helixType, sequence))
 				sequence = []
-			
+	return helixList
+
+def buildSheet(file_name, protein):
+	sequence = []
+	sheetList = []
+
+	with open(file_name, "r") as stream:
+		for line in stream:
 			#Reads from the file the information regarding the SHEET structures
 			if (line[0:5] == "SHEET"):
 				start = int(line[22:26])
 				stop = int(line[33:37])
 				seqres = str(line[21:22])
 				sheetType = int(line[38:40])
-
-				stopList.append(start)
-				startList.append(stop)
+				#There's a problem here where the beta turns are not "coils"
+				# but are a part of the sheet...
 
 				#Looks for the position of the Amino Acid using the already parsed sequence and copies the sequence
 				for AA in protein.amino_acids:
@@ -200,7 +199,31 @@ def readFileExtra(file_name, protein):
 
 				#Appends the SHEET sequence to a list of other sequences
 				sheetList.append(Sheet(start, stop, seqres, sheetType, sequence))
-				sequence = []
+	return sheetList
+
+def buildCoil(file_name, protein):
+	sequence = []
+	coilList = []
+	startList = [0]
+	stopList = []
+
+	with open(file_name, "r") as stream:
+		for line in stream:
+			#Reads from the file the information regarding the HELIX structures
+			if (line[0:5] == "HELIX"):
+				start = int(line[21:25])
+				stop = int(line[33:37])
+				stopList.append(start)
+				startList.append(stop)
+			
+			#Reads from the file the information regarding the SHEET structures
+			if (line[0:5] == "SHEET"):
+				start = int(line[22:26])
+				stop = int(line[33:37])
+				stopList.append(start)
+				startList.append(stop)
+				#There's a problem here where the beta turns are not "coils"
+
 		stopList.append(protein.length)
 
 		for start, stop in zip(startList, stopList):
@@ -209,4 +232,4 @@ def readFileExtra(file_name, protein):
 					sequence.append(AA)
 			coilList.append(Coil(start, stop, sequence))
 			sequence = []
-	return helixList, sheetList, coilList
+	return coilList
