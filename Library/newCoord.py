@@ -126,7 +126,7 @@ def calculateCoordinates(protein, filename):
 					vectorZ = vector.crossProduct(vectorX, vectorY)
 					#This should guaruntee that vector Z is now perpindicular to BOTH X and Y and not just Y
 
-def calculate(protein, filename):
+def newCalculate(protein, filename):
 	write = 'a'
 	with open('NEW_{0}.txt'.format(filename), write) as output:
 		#Sets an iterator to examine the previous, current, and next values

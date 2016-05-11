@@ -57,7 +57,7 @@ but will combine every single file into one large text file.
 It is possible to set a set amount of files for the program to calculate. 
 
 
-On line 31, there is a variable called: “only_100” which is currently set at 100, by changing the numerical value of this variable, the program will 
+On line 31, there is a variable called: “MAX_VALUE” which is currently set at 100, by changing the numerical value of this variable, the program will 
 calculate the number of files indicated by this numerical value whether it be 1000 or 10.
 
 

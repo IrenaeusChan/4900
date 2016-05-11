@@ -62,4 +62,4 @@ class Atom (object):
 		return not self.__eq__(other)
 
 	def __repr__(self):
-		return "Atom: {0} at ({1}, {2}, {3}) and {4}".format(self.atom, self.x, self.y, self.z, self.element)
+		return "\nAtom: {0} at ({1}, {2}, {3}) and {4}".format(self.atom, self.x, self.y, self.z, self.element)
