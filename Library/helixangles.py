@@ -3,6 +3,12 @@ Irenaeus Chan
 5/11/2016
 
 Helix Model Check
+
+Checklist:
+- Determine the Angles
+- Figure out the Angles for varying Helices (4, 5, 3/10)
+- Gather larger data set to determine averages
+- Evaluate a systematic approach to geometrically organizing the information
 """
 
 import sys
@@ -42,51 +48,53 @@ def evaluateAngles (helix, filename):
 		totalz /= 13
 		center = [totalx, totaly, totalz]
 
-		
-		#For each atom in the 13 Atom Turn, we want to calculate the Angles
-		for count, atom in enumerate(helixBackbone[i-13:i]):
-			if (atom.atom == "N"):
-				#output.write(str(count))
-				#The first vector should be the last N that was found, compared to...
-				Nvector1 = Nvector2
-				firstNpos = secondNpos
-				# the next N that will be in the sequence
-				Nvector2 = vector.vectorCalculation(center, [atom.x, atom.y, atom.z])
-				secondNpos = position[i-13:i][count]
-				#As long as the we have at least found TWO Nitrogens, we can calculate their angles
-				if Nvector1 != 0:
-					with open('N.txt', "a") as output:
-						output.write("N " + str(vector.dihedralAngle(Nvector1, Nvector2)) + " " + 
+		with open('N.txt', "a") as N, open('CA.txt', "a") as Ca, open('C.txt', "a") as C:
+			#For each atom in the 13 Atom Turn, we want to calculate the Angles
+			for count, atom in enumerate(helixBackbone[i-13:i]):
+				if (atom.atom == "N"):
+					#N.write(str(count))
+					#The first vector should be the last N that was found, compared to...
+					Nvector1 = Nvector2
+					firstNpos = secondNpos
+					# the next N that will be in the sequence
+					Nvector2 = vector.vectorCalculation(center, [atom.x, atom.y, atom.z])
+					#print i
+					print helixBackbone
+					print position[i-13:i]
+					print count
+					print position[i-13:i][count]
+					secondNpos = position[i-13:i][count]
+					#As long as the we have at least found TWO Nitrogens, we can calculate their angles
+					if Nvector1 != 0:
+						N.write("N " + str(vector.dihedralAngle(Nvector1, Nvector2)) + " " + 
 							str(firstNpos) + " " + str(secondNpos) + "\n")
-					#print "N " + str(vector.dihedralAngle(Nvector1, Nvector2))
-			elif (atom.atom == "CA"):
-				#output.write(str(count))
-				#The first vector should be the last Ca that was found, compared to...
-				CAvector1 = CAvector2
-				firstCApos = secondCApos
-				# the next N that will be in the sequence
-				CAvector2 = vector.vectorCalculation(center, [atom.x, atom.y, atom.z])
-				secondCApos = position[i-13:i][count]
-				#As long as the we have at least found TWO alpha-Carbons, we can calculate their angles
-				if CAvector1 != 0:
-					with open('CA.txt', "a") as output:
-						output.write("Ca " + str(vector.dihedralAngle(CAvector1, CAvector2)) + " " + 
+						#print "N " + str(vector.dihedralAngle(Nvector1, Nvector2))
+				elif (atom.atom == "CA"):
+					#Ca.write(str(count))
+					#The first vector should be the last Ca that was found, compared to...
+					CAvector1 = CAvector2
+					firstCApos = secondCApos
+					# the next N that will be in the sequence
+					CAvector2 = vector.vectorCalculation(center, [atom.x, atom.y, atom.z])
+					secondCApos = position[i-13:i][count]
+					#As long as the we have at least found TWO alpha-Carbons, we can calculate their angles
+					if CAvector1 != 0:
+						Ca.write("Ca " + str(vector.dihedralAngle(CAvector1, CAvector2)) + " " + 
 							str(firstCApos) + " " + str(secondCApos) + "\n")
-					#print "Ca " + str(vector.dihedralAngle(CAvector1, CAvector2))
-			elif (atom.atom == "C"):
-				#output.write(str(count))
-				#The first vector should be the last C that was found, compared to...
-				Cvector1 = Cvector2
-				firstCpos = secondCpos
-				# the next N that will be in the sequence
-				Cvector2 = vector.vectorCalculation(center, [atom.x, atom.y, atom.z])
-				secondCpos = position[i-13:i][count]
-				#As long as the we have at least found TWO Carbons, we can calculate their angles
-				if Cvector1 != 0:
-					with open('C.txt', "a") as output:
-						output.write("C " + str(vector.dihedralAngle(Cvector1, Cvector2)) + " " + 
+						#print "Ca " + str(vector.dihedralAngle(CAvector1, CAvector2))
+				elif (atom.atom == "C"):
+					#C.write(str(count))
+					#The first vector should be the last C that was found, compared to...
+					Cvector1 = Cvector2
+					firstCpos = secondCpos
+					# the next N that will be in the sequence
+					Cvector2 = vector.vectorCalculation(center, [atom.x, atom.y, atom.z])
+					secondCpos = position[i-13:i][count]
+					#As long as the we have at least found TWO Carbons, we can calculate their angles
+					if Cvector1 != 0:
+						C.write("C " + str(vector.dihedralAngle(Cvector1, Cvector2)) + " " + 
 							str(firstCpos) + " " + str(secondCpos) + "\n")
-					#print "C " + str(vector.dihedralAngle(Cvector1, Cvector2))
+						#print "C " + str(vector.dihedralAngle(Cvector1, Cvector2))
 
 #Code to compare relative angles to each segment (Variation in curvature)
 def relativeAngle():

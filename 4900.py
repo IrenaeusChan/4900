@@ -133,6 +133,7 @@ if __name__ == '__main__':
 	#--------------------------------------WORK HERE------------------------------------------
 	elif (len(sys.argv) > 2 and (sys.argv[1] == "Angles" or sys.argv[1] == "angles") and format(sys.argv[2])):
 		helixList = extra.buildHelix(sys.argv[2], protein.buildProtein(sys.argv[2]))
+		#print protein.buildProtein(sys.argv[2])
 		for helix in helixList:
 			#From PDB
 			# 1. Right Handed Alpha		6. Left-Handed Alpha

@@ -43,6 +43,35 @@ def buildProtein(file_name):
 	backbone = []
 	sidechain = []
 	protein = []
+	currentAminoAcid = ""
+	currentSeq = ""
+	currentPos = 0
+
+	with open(file_name, "r") as stream:
+		for line in stream:
+			if(line[0:4] == "ATOM"):
+				if ((currentPos != int(line[22:26])) and currentPos != 0):
+					#Amino Acid, SEQRES, Position, Backbone[N][Ca][C], SideChain[1]...[*]
+					aminoacid = AminoAcid(currentAminoAcid, currentSeq, currentPos, list(backbone), list(sidechain))
+					#print aminoacid
+					protein.append(aminoacid)
+					backbone = []
+					sidechain = []
+				currentAminoAcid = line[17:20]
+				currentSeq = line[21:22]
+				currentPos = int(line[22:26])
+				if (line[12:16] in backboneAtoms):
+					backbone.append(Atom(line[12:16].replace(" ", ""),float(line[31:38]), float(line[39:46]), float(line[47:54]), line[77:78]))
+				else:
+					sidechain.append(Atom(line[12:16].replace(" ", ""), float(line[31:38]), float(line[39:46]), float(line[47:54]), line[77:78]))
+		aminoacid = AminoAcid(currentAminoAcid, currentSeq, currentPos, list(backbone), list(sidechain))
+		protein.append(aminoacid)
+	return Protein(list(protein))
+
+def buildProtein1(file_name): #This is the proper one, do not change
+	backbone = []
+	sidechain = []
+	protein = []
 
 	with open(file_name, "r") as stream:
 		for line in stream:
