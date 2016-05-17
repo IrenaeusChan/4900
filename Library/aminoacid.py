@@ -8,7 +8,7 @@ Amino Acid Class w/ Functions
 from atom import Atom
 
 AMINO_ACIDS = {'GLY', 'ALA', 'SER', 'THR', 'CYS', 'VAL', 'LEU', 'ILE', 'MET', 'PRO', 'PHE', 'TYR', 'TRP', 'ASP', 'GLU', 'ASN', 'GLN', 'HIS', 'LYS', 'ARG', 'TER'}
-ELEMENTS = {'N':14, 'C':12, 'O':16, 'S':32}
+ELEMENTS = {'N':14, 'C':12, 'O':16, 'S':32, 'H':1, 'P':31}
 
 class AminoAcid (object):
 	"""A configuration for a single Amino Acid"""

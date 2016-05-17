@@ -7,7 +7,7 @@ Protein Class w/ Functions
 
 backboneAtoms = (" N  ", " CA ", " C  ")
 AMINO_ACIDS = {'GLY':1, 'ALA':2, 'SER':3, 'THR':4, 'CYS':3, 'VAL':4, 'LEU':5, 'ILE':5, 'MET':5, 'PRO':4, 'PHE':8, 'TYR':9, 'TRP':11, 'ASP':5, 'GLU':6, 'ASN':5, 'GLN':6, 'HIS':7, 'LYS':6, 'ARG':8, 'TER':0}
-ELEMENTS = {'N':14, 'C':12, 'O':16, 'S':32}
+ELEMENTS = {'N':14, 'C':12, 'O':16, 'S':32, 'H':1, 'P':31}
 
 import sys
 import vector

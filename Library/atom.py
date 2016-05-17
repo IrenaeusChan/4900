@@ -6,7 +6,7 @@ Atom Class
 """
 
 BACKBONE_ATOMS = {'N', 'Ca', 'C'}
-ELEMENTS = {'N', 'C', 'O', 'S'}
+ELEMENTS = {'N', 'C', 'O', 'S', 'H', 'P'}
 
 import sys
 

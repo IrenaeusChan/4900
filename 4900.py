@@ -27,11 +27,11 @@ def computeAll(file_name):
 		if (only_100 == MAX_VALUE):
 			break
 		else:
-			print "{0} files completed...".format(only_100)
+			only_100+=1
 			p, center = prepare(filename)
 			calculatePhiPsi(p, center, filename)
 			protein.relativeToCenter(p, center)
-			only_100+=1
+			print "{0} files completed...".format(only_100)
 
 #Checks to see if the file exists and is formatted properly
 def check(file1, file2):
@@ -131,18 +131,35 @@ if __name__ == '__main__':
 			for coil in coilList:
 				calculatePhiPsi(coil, center, sys.argv[2])
 	#--------------------------------------WORK HERE------------------------------------------
-	elif (len(sys.argv) > 2 and (sys.argv[1] == "Angles" or sys.argv[1] == "angles") and format(sys.argv[2])):
-		helixList = extra.buildHelix(sys.argv[2], protein.buildProtein(sys.argv[2]))
-		#print protein.buildProtein(sys.argv[2])
-		for helix in helixList:
-			#From PDB
-			# 1. Right Handed Alpha		6. Left-Handed Alpha
-			# 2. Right Handed Omega		7. Left-Handed Omega
-			# 3. Right-Handed Pi 		8. Left-Handed Gamma
-			# 4. Right-Handed Gamma		9. 2/7 ribbon/Helix
-			# 5. Right-Handed 3/10 		10. Polyproline *Proline breaks Helices
-			if helix.helixType == 1:
-				evaluateAngles(helix, sys.argv[2])
+	elif (len(sys.argv) > 2 and (sys.argv[1] == "Angles" or sys.argv[1] == "angles")):		# and format(sys.argv[2])
+		path += sys.argv[2]
+		if (os.path.isdir(path) == True):
+			print "\nComputing All Files."
+			only_100 = 0
+			for i in range(0,56):
+				only_100+=1
+				print "{0} files completed...".format(only_100)
+			for filename in glob.glob(os.path.join(path, '*.pdb')):
+				only_100+=1
+				helixList = extra.buildHelix(filename, protein.buildProtein(filename))
+				for helix in helixList:
+					if helix.helixType == 1:
+						evaluateAngles(helix, filename)
+				print "{0} files completed...".format(only_100)
+		elif format(sys.argv[2]):
+			helixList = extra.buildHelix(sys.argv[2], protein.buildProtein(sys.argv[2]))
+			#print protein.buildProtein(sys.argv[2])
+			for helix in helixList:
+				#From PDB
+				# 1. Right Handed Alpha		6. Left-Handed Alpha
+				# 2. Right Handed Omega		7. Left-Handed Omega
+				# 3. Right-Handed Pi 		8. Left-Handed Gamma
+				# 4. Right-Handed Gamma		9. 2/7 ribbon/Helix
+				# 5. Right-Handed 3/10 		10. Polyproline *Proline breaks Helices
+				if helix.helixType == 1:
+					evaluateAngles(helix, sys.argv[2])
+		else:
+			print "\nERROR: File type is incorrect or does not exist"
 	#--------------------------------------WORK HERE------------------------------------------
 	elif (len(sys.argv) > 2 and (sys.argv[1] == "Center" or sys.argv[1] == "center") and format(sys.argv[2])):
 		p, center = prepare(sys.argv[2])
