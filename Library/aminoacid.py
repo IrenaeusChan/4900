@@ -59,10 +59,10 @@ class AminoAcid (object):
 	def __repr__(self):
 		AA = "Amino Acid: {0}\nSEQRES: {1}\nPosition: {2}\n".format(self.amino_acid, self.seqres, self.position)
 		for a in self.backbone:
-			AA += "{0}\n".format(a)
+			AA += "{0}".format(a)
 		for b in self.sidechain:
-			AA += "{0}\n".format(b)
-		AA += "Weighted Means: {0}, {1}, {2}\n".format(self.avgx, self.avgy, self.avgz)
+			AA += "{0}".format(b)
+		AA += "\nWeighted Means: {0}, {1}, {2}\n".format(self.avgx, self.avgy, self.avgz)
 		return AA
 
 def weightedAverage(self):

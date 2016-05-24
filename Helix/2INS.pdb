@@ -773,12 +773,12 @@ HET     ZN  D  31       1
 HETNAM      ZN ZINC ION                                                         
 FORMUL   5   ZN    2(ZN 2+)                                                     
 FORMUL   7  HOH   *184(H2 O)                                                    
-HELI     1 A11 GLY A    1  VAL A   10  1NOT IDEAL ALPH,SOME PI CNTCTS     10    
+HELIX    1 A11 GLY A    1  VAL A   10  1NOT IDEAL ALPH,SOME PI CNTCTS     10    
 HELIX    2 A12 SER A   12  GLU A   17  5NOT IDEAL 3(10)                    6    
-HELI     3 B11 SER B    9  GLY B   20  1NOT IDEAL ALPH,3(10) CONTCTS      12    
-HELI     4 A21 GLY C    1  VAL C   10  1NOT IDEAL ALPH,SOME PI CNTCTS     10    
+HELIX    3 B11 SER B    9  GLY B   20  1NOT IDEAL ALPH,3(10) CONTCTS      12    
+HELIX    4 A21 GLY C    1  VAL C   10  1NOT IDEAL ALPH,SOME PI CNTCTS     10    
 HELIX    5 A22 SER C   12  GLU C   17  5NOT IDEAL 3(10)                    6    
-HELI     6 B21 SER D    9  GLY D   20  1NOT IDEAL ALPH,3(10) CONTCTS      12    
+HELIX    6 B21 SER D    9  GLY D   20  1NOT IDEAL ALPH,3(10) CONTCTS      12    
 SHEET    1   B 2 PHE B  24  TYR B  26  0                                        
 SHEET    2   B 2 PHE D  24  TYR D  26 -1  O  TYR D  26   N  PHE B  24           
 SSBOND   1 CYS A    6    CYS A   11                          1555   1555  2.14  

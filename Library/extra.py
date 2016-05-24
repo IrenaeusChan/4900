@@ -162,12 +162,11 @@ def buildHelix(file_name, protein):
 				stop = int(line[33:37])
 				seqres = str(line[19:20])
 				helixType = int(line[39:40])
-
 				#Looks for the position of the Amino Acid using the already parsed sequence and copies the sequence
 				for AA in protein.amino_acids:
-					if (AA.position >= start and AA.position <= stop):
+					if (AA.position >= start and AA.position <= stop and AA.seqres == seqres):
 						sequence.append(AA)
-					if (AA.position == stop):
+					if (AA.position == stop and AA.seqres == seqres):
 						break
 
 				#Appends the HELIX sequence to a list of other sequences
@@ -187,12 +186,10 @@ def buildSheet(file_name, protein):
 				stop = int(line[33:37])
 				seqres = str(line[21:22])
 				sheetType = int(line[38:40])
-				#There's a problem here where the beta turns are not "coils"
-				# but are a part of the sheet...
 
 				#Looks for the position of the Amino Acid using the already parsed sequence and copies the sequence
 				for AA in protein.amino_acids:
-					if (AA.position >= start and AA.position <= stop):
+					if (AA.position >= start and AA.position <= stop and AA.seqres == seqres):
 						sequence.append(AA)
 					if (AA.position == stop):
 						break
