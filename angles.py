@@ -19,16 +19,21 @@ def format(filename):
 #This sets the amount of atoms that will be checked PER turn
 def setSecondaryType(secondaryType):
 	if secondaryType == 1:
-		return 13		#Alpha Helix is 3.6 Amino Acids with 13 Atoms per Turn
+		return 11		
+		#Alpha Helix is 3.6 Amino Acids with 13 Atoms involved in the turn
+		# not counting the Hydrogen and the Oxygen that form the hydrogen bond, it is 11
+		# backbone atoms that make up a single turn
 	elif secondaryType == 5:
-		return 10 		#Pi Helix is 3 Amino Acids with 10 Atoms per Turn (3/10)
+		return 8 		
+		#Pi Helix is 3 Amino Acids with 10 Atoms involved in the turn (3/10)
+		# again, not counting the Hydrogen and the Oxygen that form the hydrogen bond, it is
+		# 8 backbone atoms that make up a single turn
 	else:
 		return 1
 
 def helixOrSheet(filename, secondaryType, helixOrsheet):
 	if (helixOrsheet == "helix"):
 		helixList = buildHelix(filename, buildProtein(filename))
-		print helixList
 		atomNumber = setSecondaryType(secondaryType)
 		for helix in helixList:
 			if helix.helixType == secondaryType:
@@ -56,9 +61,10 @@ def transFunction(filename, secondaryType, helixOrsheet):
 	atomNumber = setSecondaryType(secondaryType)
 	evaluateAngles(p, filename, atomNumber)		
 	#This one has to be the whole protein because we're doing TRANSITIONS
-	transitionAngle("{0}N.txt".format(filename.split('.')[0]), filename, helixOrsheet)
-	transitionAngle("{0}CA.txt".format(filename.split('.')[0]), filename, helixOrsheet)
-	transitionAngle("{0}C.txt".format(filename.split('.')[0]), filename, helixOrsheet)
+	#The type of Helix does matter in this case because the angles are calculated differently
+	transitionAngle("{0}N.txt".format(filename.split('.')[0]), filename, secondaryType, helixOrsheet)
+	transitionAngle("{0}CA.txt".format(filename.split('.')[0]), filename, secondaryType, helixOrsheet)
+	transitionAngle("{0}C.txt".format(filename.split('.')[0]), filename, secondaryType, helixOrsheet)
 
 	#From PDB
 	#---------------------HELIX-----------------------------------------

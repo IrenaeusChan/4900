@@ -31,18 +31,16 @@ def organizeStructure (helix):
 
 #Code to evaluate angles from each atom to it's next respective atom
 def evaluateAngles (secondaryStructure, filename, atomNumber):
-	helixBackbone, position, seqres = organizeStructure(secondaryStructure)
-	print position
-	print seqres
+	structureBackbone, position, seqres = organizeStructure(secondaryStructure)
 	filePrep = filename.split('.')
-	for i in range(atomNumber,len(helixBackbone)+1):
-		#We want to initialize these variables for EACH 13 Atom Section
+	for i in range(atomNumber,len(structureBackbone)+1):
+		#We want to initialize these variables for EACH segment of atoms
 		totalx, totaly, totalz = 0, 0 ,0
 		Nvector2, CAvector2, Cvector2 = 0, 0, 0
 		secondNpos, secondCApos, secondCpos = 0, 0, 0
 
-		#Calculates the Average Center of the 13 Atoms	
-		for atom in helixBackbone[i-atomNumber:i]:
+		#Calculates the Average Center of the Atom segments
+		for atom in structureBackbone[i-atomNumber:i]:
 		 	totalx += atom.x
 		 	totaly += atom.y
 		 	totalz += atom.z
@@ -54,7 +52,7 @@ def evaluateAngles (secondaryStructure, filename, atomNumber):
 		with open('{0}N.txt'.format(filePrep[0]), "a") as N, open('{0}CA.txt'.format(filePrep[0]), "a") as Ca, open('{0}C.txt'.format(filePrep[0]), "a") as C:
 			#For each atom in the 13 Atom Turn, we want to calculate the Angles
 			#There is a bug where if the list of atoms is less than a single "Turn" it won't do the angle calculations
-			for count, atom in enumerate(helixBackbone[i-atomNumber:i]):
+			for count, atom in enumerate(structureBackbone[i-atomNumber:i]):
 				if (atom.atom == "N"):
 					try:
 						#The first vector should be the last N that was found, compared to...
@@ -101,7 +99,7 @@ def evaluateAngles (secondaryStructure, filename, atomNumber):
 					except IndexError:
 						print "Error Detected in PDB File: C in Residue {0}".format(secondCpos)
 
-def transitionAngle(atomFile, infoFile, helixOrsheet):
+def transitionAngle(atomFile, infoFile, secondaryType, helixOrsheet):
 	atomList = []
 	outPrep = atomFile.split(".")
 	with open(atomFile, "r") as atoms, open(infoFile, "r") as stream, open("{0}parsed.txt".format(outPrep[0]), "a") as out:
@@ -114,6 +112,9 @@ def transitionAngle(atomFile, infoFile, helixOrsheet):
 					start = int(line[21:25])
 					stop = int(line[33:37])
 					seqres = str(line[19:20])
+					helixType = int(line[39:40])
+					if helixType != secondaryType:
+						continue
 					for a in atomList:
 						atom = a.split()		#[0]-ATOM [1]-ANGLE [2]-POS1 [3]-POS2 [4]-SEQRES
 						if (int(atom[2]) == (start-1) and int(atom[3]) == start and atom[4] == seqres):
@@ -125,6 +126,9 @@ def transitionAngle(atomFile, infoFile, helixOrsheet):
 					start = int(line[22:26])
 					stop = int(line[33:37])
 					seqres = str(line[21:22])
+					sheetType = int(line[38:40])
+					if sheetType != secondaryType:
+						continue
 					for a in atomList:
 						atom = a.split()		#[0]-ATOM [1]-ANGLE [2]-POS1 [3]-POS2 [4]-SEQRES
 						if (int(atom[2]) == (start-1) and int(atom[3]) == start and atom[4] == seqres):
