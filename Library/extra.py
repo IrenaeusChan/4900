@@ -191,11 +191,12 @@ def buildSheet(file_name, protein):
 				for AA in protein.amino_acids:
 					if (AA.position >= start and AA.position <= stop and AA.seqres == seqres):
 						sequence.append(AA)
-					if (AA.position == stop):
+					if (AA.position == stop and AA.seqres == seqres):
 						break
 
 				#Appends the SHEET sequence to a list of other sequences
 				sheetList.append(Sheet(start, stop, seqres, sheetType, sequence))
+				sequence = []
 	return sheetList
 
 def buildCoil(file_name, protein):

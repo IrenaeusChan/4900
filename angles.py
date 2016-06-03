@@ -4,7 +4,10 @@ import os
 sys.path.append(os.path.realpath("Library"))
 from protein import buildProtein
 from extra import buildHelix, buildSheet
-from helixangles import evaluateAngles, transitionAngle
+import helixangles
+import sheetangles
+import time
+import vector
 
 MAX_VALUE = 100 		#Used for cases where there are... like... 1 million files
 path = os.getcwd()
@@ -37,12 +40,16 @@ def helixOrSheet(filename, secondaryType, helixOrsheet):
 		atomNumber = setSecondaryType(secondaryType)
 		for helix in helixList:
 			if helix.helixType == secondaryType:
-				evaluateAngles(helix, filename, atomNumber)
+				helixangles.evaluateAngles(helix, filename, atomNumber)
 	elif (helixOrsheet == "sheet"):
-		sheetList = buildSheet(sys.argv[2], buildProtein(sys.argv[2]))
+		sheetList = buildSheet(filename, buildProtein(filename))
 		for sheet in sheetList:
 			if sheet.sheetType == secondaryType:
-				evaluateAngles(sheet, sys.argv[2], 10)
+				#These are to prove the equations work
+				#vector.orthogonalLineCalculation([2,1,-3],[1,1,1])
+				#vector.orthogonalVectorCalculation([1,-2,-3], [5,2,-1], [1,2,-1], [2,0,4])
+				sheetangles.evaluateAngles(sheet, sys.argv[2], 10)
+				sys.exit(1)
 				#This 10 is temporary until I figure out how to deal with the angle
 
 #Function for computing all the PDB Files in a Directory
@@ -59,12 +66,12 @@ def computeAll(secondaryType, helixOrsheet):
 def transFunction(filename, secondaryType, helixOrsheet):
 	p = buildProtein(filename)
 	atomNumber = setSecondaryType(secondaryType)
-	evaluateAngles(p, filename, atomNumber)		
+	helixangles.evaluateAngles(p, filename, atomNumber)		
 	#This one has to be the whole protein because we're doing TRANSITIONS
 	#The type of Helix does matter in this case because the angles are calculated differently
-	transitionAngle("{0}N.txt".format(filename.split('.')[0]), filename, secondaryType, helixOrsheet)
-	transitionAngle("{0}CA.txt".format(filename.split('.')[0]), filename, secondaryType, helixOrsheet)
-	transitionAngle("{0}C.txt".format(filename.split('.')[0]), filename, secondaryType, helixOrsheet)
+	helixangles.transitionAngle("{0}N.txt".format(filename.split('.')[0]), filename, secondaryType, helixOrsheet)
+	helixangles.transitionAngle("{0}CA.txt".format(filename.split('.')[0]), filename, secondaryType, helixOrsheet)
+	helixangles.transitionAngle("{0}C.txt".format(filename.split('.')[0]), filename, secondaryType, helixOrsheet)
 
 	#From PDB
 	#---------------------HELIX-----------------------------------------

@@ -6,18 +6,12 @@ Helix Model Check
 
 Checklist:
 - Evaluate a systematic approach to geometrically organizing the information based on sequences
+- There is a bug where if the list of atoms is less than a single "Turn" it won't do the angle calculations
 """
-
-import string
-import sys
-from protein import buildProtein
 import vector
-import extra
-import aminoacid
-import atom
 
 #Code to store turn (Large number of small segments)
-def organizeStructure (helix):
+def organizeHelix (helix):
 	helixBackbone = []
 	position = []
 	seqres = []
@@ -30,17 +24,17 @@ def organizeStructure (helix):
 #turn large list of 1 helix into smaller list of 13, run through list...
 
 #Code to evaluate angles from each atom to it's next respective atom
-def evaluateAngles (secondaryStructure, filename, atomNumber):
-	structureBackbone, position, seqres = organizeStructure(secondaryStructure)
+def evaluateAngles (helix, filename, atomNumber):
+	helixBackbone, position, seqres = organizeHelix(helix)
 	filePrep = filename.split('.')
-	for i in range(atomNumber,len(structureBackbone)+1):
+	for i in range(atomNumber,len(helixBackbone)+1):
 		#We want to initialize these variables for EACH segment of atoms
 		totalx, totaly, totalz = 0, 0 ,0
 		Nvector2, CAvector2, Cvector2 = 0, 0, 0
 		secondNpos, secondCApos, secondCpos = 0, 0, 0
 
 		#Calculates the Average Center of the Atom segments
-		for atom in structureBackbone[i-atomNumber:i]:
+		for atom in helixBackbone[i-atomNumber:i]:
 		 	totalx += atom.x
 		 	totaly += atom.y
 		 	totalz += atom.z
@@ -52,7 +46,7 @@ def evaluateAngles (secondaryStructure, filename, atomNumber):
 		with open('{0}N.txt'.format(filePrep[0]), "a") as N, open('{0}CA.txt'.format(filePrep[0]), "a") as Ca, open('{0}C.txt'.format(filePrep[0]), "a") as C:
 			#For each atom in the 13 Atom Turn, we want to calculate the Angles
 			#There is a bug where if the list of atoms is less than a single "Turn" it won't do the angle calculations
-			for count, atom in enumerate(structureBackbone[i-atomNumber:i]):
+			for count, atom in enumerate(helixBackbone[i-atomNumber:i]):
 				if (atom.atom == "N"):
 					try:
 						#The first vector should be the last N that was found, compared to...
