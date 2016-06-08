@@ -45,11 +45,8 @@ def helixOrSheet(filename, secondaryType, helixOrsheet):
 		sheetList = buildSheet(filename, buildProtein(filename))
 		for sheet in sheetList:
 			if sheet.sheetType == secondaryType:
-				#These are to prove the equations work
-				#vector.orthogonalLineCalculation([2,1,-3],[1,1,1])
-				#vector.orthogonalVectorCalculation([1,-2,-3], [5,2,-1], [1,2,-1], [2,0,4])
-				sheetangles.evaluateAngles(sheet, sys.argv[2], 10)
-				sys.exit(1)
+				#vector.orthogonalVectorCalculation([1,3,2], [-6,-3,2], [-1,-5,2])
+				sheetangles.evaluateAngles(sheet, sys.argv[2])
 				#This 10 is temporary until I figure out how to deal with the angle
 
 #Function for computing all the PDB Files in a Directory

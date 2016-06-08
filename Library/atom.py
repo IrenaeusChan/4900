@@ -13,7 +13,7 @@ import sys
 class Atom (object):
 	"""A configuration for a single Backbone Atom"""
 
-	def __init__(self, atom, x, y, z, element):
+	def __init__(self, atom, x, y, z, position, element):
 		"""Creates a new Atom
 
 		Arguments:
@@ -21,6 +21,7 @@ class Atom (object):
 			x: X position of the atom
 			y: Y position of the atom
 			z: Z position of the atom
+			position: The Amino Acid which the Atom belongs to
 			element: Which element the atom is made of (mainly important for side chains)
 
 		Exceptions:
@@ -46,6 +47,11 @@ class Atom (object):
 			self.z = z
 		else:
 			raise ValueError('Invalid Z {0}'.format(z))
+
+		if isinstance(position, int):
+			self.position = position
+		else:
+			raise ValueError('Invalid Position {0}'.format(position))
 
 		if element in ELEMENTS:
 			self.element = element

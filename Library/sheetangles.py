@@ -11,48 +11,56 @@ import math
 import vector
 
 def printSheetBackbone(sheetBackbone):
-	with open('testing.txt', "w") as temp:
-		temp.write("x,y,z\n")
-		for what in sheetBackbone:
-			temp.write(str(what[0])+","+str(what[1])+","+str(what[2])+"\n")
+	with open('output.txt', "w") as out:
+		out.write("x,y,z\n")
+		for atom in sheetBackbone:
+			out.write(str(atom[0])+","+str(atom[1])+","+str(atom[2])+"\n")
 
 #Code to convert the SheetList into a single List of Coordinates
 def organizeSheet (sheet):
 	sheetBackbone = []
+	centerAtoms = []
+	listOfCoords = []
+	totalx, totaly, totalz = 0, 0, 0
 	#position = []					Not sure if we need these yet...
 	#seqres = []
 	for AA in sheet.amino_acids:
 		for atom in AA.backbone:
-			sheetBackbone.append([atom.x, atom.y, atom.z])
-		#position += [AA.position, AA.position, AA.position]
-		#seqres += [AA.seqres, AA.seqres, AA.seqres]
-	return sheetBackbone#, position, seqres
+			totalx += atom.x
+		 	totaly += atom.y
+		 	totalz += atom.z
+		 	sheetBackbone.append(atom)
+		 	listOfCoords.append([atom.x, atom.y, atom.z])
+		totalx /= 3
+		totaly /= 3
+		totalz /= 3
+		centerAtoms.append([totalx, totaly, totalz])
+		totalx, totaly, totalz = 0, 0, 0
+	return sheetBackbone, centerAtoms, listOfCoords
 
-def angleCalculation(atomList):
-	for i in range(0,len(atomList)-1):
-		print vector.dihedralAngle(atomList[i], atomList[i+1])
+def angleCalculation(vectorList, atomList, listType):
+	with open('sheetAngles.txt', "a") as out:
+		out.write(listType + "\n")
+		for i in range(0,len(vectorList)-1):
+			angle = vector.dihedralAngle(vectorList[i], vectorList[i+1])
+			out.write(str(angle) + " " + str(atomList[i].atom) + " " + str(atomList[i].position) + " " + str(atomList[i+1].atom) + " " + str(atomList[i+1].position) + "\n")
+		out.write("\n")
 
-def evaluateAngles (sheet, filename, atomNumber):
+def evaluateAngles (sheet, filename):
 	topAtoms, bottomAtoms = [], []
-	allAtoms = []
-	sheetBackbone = organizeSheet(sheet)
+	sheetBackbone, centerAtoms, listOfCoords = organizeSheet(sheet)
 	#printSheetBackbone(sheetBackbone)
-	regressionVector, regressionPoint = vector.orthogonalDistanceRegression(sheetBackbone)
-	print regressionVector
-	print regressionPoint
+	#printSheetBackbone(centerAtoms)
+	#regressionVector, regressionPoint = vector.orthogonalDistanceRegression(centerAtoms)
+	regressionVector, regressionPoint = vector.orthogonalDistanceRegression(listOfCoords)
 	for pos, atom in enumerate(sheetBackbone):
-		orthogonalLine = vector.orthogonalLineCalculation(regressionVector, atom)
-		orthogonalVector = vector.orthogonalVectorCalculation(orthogonalLine, atom, regressionVector, regressionPoint)
-		#allAtoms.append(orthogonalVector)
-		#if pos % 2 == 0:			#if the number is even
-		#	topAtoms.append(orthogonalVector)
-		#else:
-		#	bottomAtoms.append(orthogonalVector)
+		orthogonalVector = vector.orthogonalVectorCalculation(regressionPoint, regressionVector, [atom.x, atom.y, atom.z])
+		if pos % 2 == 0:			#if the number is even
+			topAtoms.append([orthogonalVector, atom])
+		else:
+			bottomAtoms.append([orthogonalVector, atom])
 
-	#angleCalculation(topAtoms)
-	#print "SPACE"
-	#angleCalculation(bottomAtoms)
-	#print "SPACE"
-	#angleCalculation(allAtoms)
+	angleCalculation([i[0] for i in topAtoms], [a[1] for a in topAtoms], "top")
+	angleCalculation([i[0] for i in bottomAtoms], [a[1] for a in bottomAtoms], "bottom")
 
-	filePrep = filename.split('.')
+	filePrep = filename.split('.')		#This might be useful still, not sure

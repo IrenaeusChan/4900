@@ -5,7 +5,9 @@ Irenaeus Chan
 Math Calculations Required for Protein Analysis
 """
 
+from __future__ import division
 import numpy as np
+import math
 from decimal import *
 
 def vectorCalculation(coord1, coord2):
@@ -43,26 +45,35 @@ def orthogonalDistanceRegression(listOfCoord):
 	# we reorganize that matrix into a single vertical array using the np.newaxis function on the
 	# whole array
 	pointsOnLine = vv[0] * np.mgrid[-50:50:2j][:, np.newaxis]	
-	#The -10:10 accounts for a rough spread of how far the start and stop atoms are from each 
+	#The -50:50 accounts for a rough spread of how far the start and stop atoms are from each 
 	# other, the distance was eyeballed using R statistical software and is arbitrary
 	pointsOnLine += mean
 	pointsOnLine = pointsOnLine.tolist()
 	regressionVector = vectorCalculation(pointsOnLine[0], pointsOnLine[1])
 	#regressionVector = vectorCalculation([decimal.Decimal(pointsOnLine[0][0]), decimal.Decimal(pointsOnLine[0][1]), decimal.Decimal(pointsOnLine[0][2])], 
 	#	[decimal.Decimal(pointsOnLine[1][0]), decimal.Decimal(pointsOnLine[1][1]), decimal.Decimal(pointsOnLine[1][2])])
-	regressionVector = (round(Decimal(regressionVector[0]), 3), round(Decimal(regressionVector[1]), 3), round(Decimal(regressionVector[2]), 3))
-	pointsOnLine[0] = [round(Decimal(pointsOnLine[0][0]), 3), round(Decimal(pointsOnLine[0][1]), 3), round(Decimal(pointsOnLine[0][2]), 3)]
+	#regressionVector = (round(Decimal(regressionVector[0]), 3), round(Decimal(regressionVector[1]), 3), round(Decimal(regressionVector[2]), 3))
+	#pointsOnLine[0] = [round(Decimal(pointsOnLine[0][0]), 3), round(Decimal(pointsOnLine[0][1]), 3), round(Decimal(pointsOnLine[0][2]), 3)]
 	return regressionVector, pointsOnLine[0]
 
-def orthogonalLineCalculation(vector, point):
-	#Vector V defined as (x, y, z) and point P defined as (a, b, c).
-	#Any point along vector V can be represented by (xk, yk, zk)
-	#Let us assume that (xk-a, xk-b, xk-c) is a NEW vector, L from the point, P to the vector, V
+def orthogonalVectorCalculation(pointOnLine, vectorOfLine, point):
+	#Vector V defined as (x, y, z), a point on the line A defined as (l, m, n) and point P defined as (a, b, c).
+	#Any point along vector V can be represented by A + kV or (l+xk, m+yk, n+zk)
+	#Let us assume that (l+xk-a, m+xk-b, n+xk-c) is a NEW vector, O from the point, P to the point A on the vector
 	# that is also orthogonal to vector V
-	#To find the values of the orthogonal vector, L, the dot product between the orthogonal
-	# vector, L and vector V must be equivalent to 0
-	#Therefore, (xk-a, yk-b, zk-c) . (x, y, z) = 0 would yeild the appropriate orthogonal vector, L
-	#As such, k = (ax + by + cz)/(x^2 + y^2 + z^2)
+	#To find the values of the orthogonal vector, O, the dot product between the orthogonal
+	# vector, O and vector V must be equivalent to 0
+	#Therefore, (l+xk-a, m+xk-b, n+xk-c) . (x, y, z) = 0 would yeild the appropriate orthogonal vector, L
+	#As such, k = (ax - lx + by - my + cz - nz)/(x^2 + y^2 + z^2)
+	numerator = ((point[0]*vectorOfLine[0]) - (pointOnLine[0]*vectorOfLine[0])) + ((point[1]*vectorOfLine[1]) - (pointOnLine[1]*vectorOfLine[1])) + ((point[2]*vectorOfLine[2]) - (pointOnLine[2]*vectorOfLine[2]))
+	denominator = ((vectorOfLine[0]**2) + (vectorOfLine[1]**2) + (vectorOfLine[2]**2))
+	k = numerator/denominator
+	newPoint = (k*vectorOfLine[0]+pointOnLine[0],k*vectorOfLine[1]+pointOnLine[1],k*vectorOfLine[2]+pointOnLine[2])
+	return vectorCalculation(newPoint,point)
+
+
+""" I DON'T NEED THIS... BUT KEEPING IT JUST IN CASE
+def orthogonalLineCalculation(vector, point):
 	point = [round(Decimal(point[0]),3), round(Decimal(point[1]),3), round(Decimal(point[2]),3)]
 	k = ((point[0]*vector[0]) + (point[1]*vector[1]) + (point[2]*vector[2]))/((vector[0]**2) + (vector[1]**2) + (vector[2]**2))
 	orthogonalLine = (point[0]-vector[0]*k, point[1]-vector[1]*k, point[2]-vector[2]*k)
@@ -71,7 +82,8 @@ def orthogonalLineCalculation(vector, point):
 	# the vector that goes from the point on vector, V to point, P, meaning (a-xk, b-xk, c-xk)
 	return orthogonalLine
 
-def orthogonalVectorCalculation(Vorth, Patom, Vregr, Pregr):
+THIS IS USELESS TO ME!!!! HAHAHAHA
+def orthogonalVectorCalculationTEST(Vorth, Patom, Vregr, Pregr):
 	print "HERE"
 	print Vorth
 	print Patom
@@ -96,6 +108,7 @@ def orthogonalVectorCalculation(Vorth, Patom, Vregr, Pregr):
 	else:
 		print "There was no intersection..."
 	print "END"
+"""
 
 #R Code
 #data<-read.csv(choose.files(), header=T)

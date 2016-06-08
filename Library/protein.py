@@ -61,9 +61,9 @@ def buildProtein(file_name):
 				currentSeq = str(line[21:22])
 				currentPos = int(line[22:26])
 				if (line[12:16] in backboneAtoms):
-					backbone.append(Atom(line[12:16].replace(" ", ""),float(line[31:38]), float(line[39:46]), float(line[47:54]), str(line[77:78])))
+					backbone.append(Atom(line[12:16].replace(" ", ""),float(line[31:38]), float(line[39:46]), float(line[47:54]), currentPos, str(line[77:78])))
 				else:
-					sidechain.append(Atom(line[12:16].replace(" ", ""), float(line[31:38]), float(line[39:46]), float(line[47:54]), str(line[77:78])))
+					sidechain.append(Atom(line[12:16].replace(" ", ""), float(line[31:38]), float(line[39:46]), float(line[47:54]), currentPos, str(line[77:78])))
 		aminoacid = AminoAcid(currentAminoAcid, currentSeq, currentPos, list(backbone), list(sidechain))
 		protein.append(aminoacid)
 	return Protein(list(protein))
