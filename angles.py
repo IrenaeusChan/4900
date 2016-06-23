@@ -46,7 +46,7 @@ def helixOrSheet(filename, secondaryType, helixOrsheet):
 		for sheet in sheetList:
 			if sheet.sheetType == secondaryType:
 				#vector.orthogonalVectorCalculation([1,3,2], [-6,-3,2], [-1,-5,2])
-				sheetangles.evaluateAngles(sheet, sys.argv[2])
+				sheetangles.evaluateAngles(sheet, filename)
 				#This 10 is temporary until I figure out how to deal with the angle
 
 #Function for computing all the PDB Files in a Directory
@@ -84,7 +84,7 @@ def transFunction(filename, secondaryType, helixOrsheet):
 	# 0. The First Strand in a Sheet
 
 if __name__ == '__main__':
-	if (len(sys.argv) > 3 and (int(sys.argv[1]) in range(1,11)) and (sys.argv[3] == "helix" or sys.argv[3] == "sheet")):		# and format(sys.argv[2])
+	if (len(sys.argv) > 3 and (isinstance(sys.argv[1], int)) and (sys.argv[3] == "helix" or sys.argv[3] == "sheet")):		# and format(sys.argv[2])
 		path += sys.argv[2]
 		if (os.path.isdir(path) == True):
 			print "\nComputing All Files."
@@ -94,7 +94,7 @@ if __name__ == '__main__':
 		else:
 			print "\nERROR: File type is incorrect or does not exist"
 	#This one only calculates the transition from the Helices to Coils
-	elif (len(sys.argv) > 3 and (int(sys.argv[1]) in range(1,11)) and (sys.argv[3] == "trans")):		# and format(sys.argv[2])
+	elif (len(sys.argv) > 3 and (isinstance(sys.argv[1], int)) and (sys.argv[3] == "trans")):		# and format(sys.argv[2])
 		path += sys.argv[2]
 		if (os.path.isdir(path) == True):
 			print "\nComputing All files"
@@ -108,4 +108,4 @@ if __name__ == '__main__':
 		else:
 			print "\nERROR: File type is incorrect or does not exist"
 	else:
-		print "\nERROR: 2 Arguments Required SecondaryType File HelixOrSheetOrTrans"
+		print "\nERROR: 2 Arguments Required SecondaryType[int] File[.pdb] HelixOrSheetOrTrans"

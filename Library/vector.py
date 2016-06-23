@@ -71,45 +71,6 @@ def orthogonalVectorCalculation(pointOnLine, vectorOfLine, point):
 	newPoint = (k*vectorOfLine[0]+pointOnLine[0],k*vectorOfLine[1]+pointOnLine[1],k*vectorOfLine[2]+pointOnLine[2])
 	return vectorCalculation(newPoint,point)
 
-
-""" I DON'T NEED THIS... BUT KEEPING IT JUST IN CASE
-def orthogonalLineCalculation(vector, point):
-	point = [round(Decimal(point[0]),3), round(Decimal(point[1]),3), round(Decimal(point[2]),3)]
-	k = ((point[0]*vector[0]) + (point[1]*vector[1]) + (point[2]*vector[2]))/((vector[0]**2) + (vector[1]**2) + (vector[2]**2))
-	orthogonalLine = (point[0]-vector[0]*k, point[1]-vector[1]*k, point[2]-vector[2]*k)
-	orthogonalLine = (round(Decimal(orthogonalLine[0]), 3), round(Decimal(orthogonalLine[1]), 3), round(Decimal(orthogonalLine[2]), 3))
-	#Since (xk-a, xk-b, xk-c) is a vector from point, P to the vector, V, we want to look for
-	# the vector that goes from the point on vector, V to point, P, meaning (a-xk, b-xk, c-xk)
-	return orthogonalLine
-
-THIS IS USELESS TO ME!!!! HAHAHAHA
-def orthogonalVectorCalculationTEST(Vorth, Patom, Vregr, Pregr):
-	print "HERE"
-	print Vorth
-	print Patom
-	print Vregr
-	print Pregr
-
-	l = ((Vregr[1]*Patom[0]) - (Vregr[1]*Pregr[0]) - (Vregr[0]*Patom[1]) + (Vregr[0]*Pregr[1]))/((Vregr[0]*Vorth[1]) - (Vregr[1]*Vorth[0]))
-	m = (Patom[0] + (l*Vorth[0]) - Pregr[0])/(Vregr[0])
-	print "ANSWERS"
-	print l
-	print m
-
-	print "COORDINATES"
-	print (Patom[2]+(l*Vorth[2]))
-	print (Pregr[2]+(m*Vregr[2]))
-
-	if ((Patom[2]+(l*Vorth[2])) == (Pregr[2]+(m*Vregr[2]))):
-		pointOfIntersection = (Patom[0]+(l*Vorth[0]), Patom[1]+(l*Vorth[1]), Patom[2]+(l*Vorth[2]))
-		print "SUCCESS"
-		print pointOfIntersection
-		return vectorCalculation(pointOfIntersection, Patom)
-	else:
-		print "There was no intersection..."
-	print "END"
-"""
-
 #R Code
 #data<-read.csv(choose.files(), header=T)
 #s<-scatterplot3d(data$x, data$y, data$z)

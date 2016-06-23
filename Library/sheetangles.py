@@ -38,8 +38,9 @@ def organizeSheet (sheet):
 		totalx, totaly, totalz = 0, 0, 0
 	return sheetBackbone, centerAtoms, listOfCoords
 
-def angleCalculation(vectorList, atomList, listType):
-	with open('sheetAngles.txt', "a") as out:
+def angleCalculation(vectorList, atomList, listType, filename):
+	filePrep = filename.split('.')
+	with open('{0}sheet.txt'.format(filePrep[0]), "a") as out:
 		out.write(listType + "\n")
 		for i in range(0,len(vectorList)-1):
 			angle = vector.dihedralAngle(vectorList[i], vectorList[i+1])
@@ -60,7 +61,5 @@ def evaluateAngles (sheet, filename):
 		else:
 			bottomAtoms.append([orthogonalVector, atom])
 
-	angleCalculation([i[0] for i in topAtoms], [a[1] for a in topAtoms], "top")
-	angleCalculation([i[0] for i in bottomAtoms], [a[1] for a in bottomAtoms], "bottom")
-
-	filePrep = filename.split('.')		#This might be useful still, not sure
+	angleCalculation([i[0] for i in topAtoms], [a[1] for a in topAtoms], "top", filename)
+	angleCalculation([i[0] for i in bottomAtoms], [a[1] for a in bottomAtoms], "bottom", filename)
