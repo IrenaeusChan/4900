@@ -66,6 +66,7 @@ def format(filename):
 if __name__ == '__main__':
 	if len(sys.argv) < 2:
 		print "\nERROR: No file was provided"
+		print "\nFORMAT: File[.pdb]"
 		sys.exit(1)
 	#Does a single file Ramachandran Plot
 	elif format(sys.argv[1]):
@@ -80,7 +81,8 @@ if __name__ == '__main__':
 			computeAll(sys.argv[2])
 		else:
 			print "\nERROR: This folder does not exist"
-			print "ERROR: Please make sure directory format is correct - \Directory"
+			print "\nERROR: Please make sure directory format is correct"
+			print "\nFORMAT: all \Directory"
     #New Geometric Calculations
 	elif (sys.argv[1] == "new" and len(sys.argv) > 2 and format(sys.argv[2])):
 		p = protein.buildProtein(sys.argv[2])
@@ -95,7 +97,8 @@ if __name__ == '__main__':
 		print "\nAligning your two files."
 		mainSeq, targetSeq = check(sys.argv[2], sys.argv[3])
 		if (mainSeq == False or targetSeq == False):
-			print "\nERROR: Please make sure the file type is correct - filename.pdb.txt"
+			print "\nERROR: Please make sure the file type is correct"
+			print "\nFORMAT: align File1[.pdb.txt] File2[.pdb.txt]"
 		else:
 			smithwaterman.align(mainSeq, targetSeq, sys.argv[2], sys.argv[3])
 	#If the user wants to calculate the PhiPsi angles for ONLY the Helix or SHEETS	
@@ -136,7 +139,7 @@ if __name__ == '__main__':
 		p, center = prepare(sys.argv[2])
 		protein.relativeToCenter(p, center)
 	else:
-		print "\nERROR: File type is incorrect or does not exist"
+		print "\nERROR: File type is incorrect [.pdb] or does not exist"
 
 	print "\nOther Options Available:"
 	print "\tCenter\t\t- Calculates Center of Protein"
@@ -144,12 +147,11 @@ if __name__ == '__main__':
 	print "\tHelix\t\t- Applies Ramachandran Plots to JUST Helix"
 	print "\tSheets\t\t- Applies Ramachandran Plots to JUST Sheets"
 	print "\tCoil\t\t- Applies Ramachandran Plots to JUST Coils"
+	print "\tAll\t\t- Calculates the PhiPsi Angles for all PDB Files in a Directory"
+	print "\tNew\t\t- Applies a New-Type of Geometric Analysis on a single PDB File (In Progress)"
 	print ""
-	print "If you would like to calculate entire directories of PDB Files:"
-	print "\tall folder_directory"
+	print "python 4900.py [Option] [File]"
+	print ""
 	print "To align two PDB files that have existing PhiPsi Calculations already done"
 	print "using Smith-Waterman Algorithm:"
 	print "\talign file_name1 file_name2"
-	print ""
-	print "In order to use the New Geometric Analysis on a single PDB file (In progress):"
-	print "\t new file_name"

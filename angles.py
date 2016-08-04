@@ -84,7 +84,9 @@ def transFunction(filename, secondaryType, helixOrsheet):
 	# 0. The First Strand in a Sheet
 
 if __name__ == '__main__':
-	if (len(sys.argv) > 3 and (isinstance(sys.argv[1], int)) and (sys.argv[3] == "helix" or sys.argv[3] == "sheet")):		# and format(sys.argv[2])
+	#There is a problem with this where the "isinstance(var, type)" code doesn't work 
+	#since sys.argv[1] is always a char
+	if (len(sys.argv) > 3 and (sys.argv[3] == "helix" or sys.argv[3] == "sheet")): #and (isinstance(sys.argv[1], int)):		# and format(sys.argv[2])
 		path += sys.argv[2]
 		if (os.path.isdir(path) == True):
 			print "\nComputing All Files."
@@ -94,7 +96,7 @@ if __name__ == '__main__':
 		else:
 			print "\nERROR: File type is incorrect or does not exist"
 	#This one only calculates the transition from the Helices to Coils
-	elif (len(sys.argv) > 3 and (isinstance(sys.argv[1], int)) and (sys.argv[3] == "trans")):		# and format(sys.argv[2])
+	elif (len(sys.argv) > 3 and (sys.argv[3] == "trans")): #and (isinstance(sys.argv[1], int)) :		# and format(sys.argv[2])
 		path += sys.argv[2]
 		if (os.path.isdir(path) == True):
 			print "\nComputing All files"
